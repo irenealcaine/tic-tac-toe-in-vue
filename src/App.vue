@@ -48,6 +48,17 @@ const ResetGame = () => {
   ];
   player.value = "X";
 };
+
+const isBoardFull = computed(() => {
+  for (let row of board.value) {
+    for (let cell of row) {
+      if (cell === "") {
+        return false;
+      }
+    }
+  }
+  return true;
+});
 </script>
 
 <template>
@@ -65,7 +76,7 @@ const ResetGame = () => {
           v-for="(cell, y) in row"
           :key="y"
           @click="MakeMove(x, y)"
-          :class="`border border-white w-20 h-20 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-6xl cursor-pointer transition duration-200 ${
+          :class="`border-2 border-green-500 w-20 md:w-28 h-20 md:h-28 hover:bg-gray-700 flex items-center justify-center material-icons-outlined text-6xl md:text-8xl cursor-pointer transition duration-200 ${
             cell === 'X' ? 'text-pink-500' : 'text-blue-400'
           }`"
         >
@@ -74,12 +85,15 @@ const ResetGame = () => {
       </div>
     </div>
 
-    <h2 v-if="winner" class="text-5xl font-bold mb-8">
+    <h2 v-if="winner" :class="`text-5xl font-bold mb-8 ${winner === 'X' ? 'text-pink-500' : 'text-blue-400'}`">
       Player {{ winner }} wins!
     </h2>
 
+    <h2 v-if="isBoardFull && !winner" class="text-5xl text-green-500 font-bold mb-8">It's a tie!</h2>
+
     <button
       @click="ResetGame"
+      v-if="winner || isBoardFull"
       class="px-16 py-2 text-3xl bg-red-700 rounded font-bold hover:bg-red-900 duration-200"
     >
       Reset
@@ -87,4 +101,5 @@ const ResetGame = () => {
   </main>
 </template>
 
-<style></style>
+<style>
+</style>
