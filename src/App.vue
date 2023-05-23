@@ -105,10 +105,6 @@ watchEffect(() => {
     >
       Player {{ winner }} wins!
     </h2>
-
-    <div>Player X wins: {{ playerXWins }}</div>
-    <div>Player O wins: {{ playerOWins }}</div>
-
     <h2
       v-if="isBoardFull && !winner"
       class="text-5xl text-green-500 font-bold mb-8"
@@ -116,10 +112,21 @@ watchEffect(() => {
       It's a tie!
     </h2>
 
+    <div class="flex flex-col md:flex-row md:gap-8 justify-center">
+      <div>
+        Player X wins:
+        <span class="text-3xl text-pink-500">{{ playerXWins }}</span>
+      </div>
+      <div>
+        Player O wins:
+        <span class="text-3xl text-blue-400">{{ playerOWins }}</span>
+      </div>
+    </div>
+
     <button
       @click="ResetGame"
       v-if="winner || isBoardFull"
-      class="px-16 py-2 text-3xl bg-red-700 rounded font-bold hover:bg-red-900 duration-200"
+      class="px-16 py-2 my-4 text-3xl bg-red-700 rounded font-bold hover:bg-red-900 duration-200"
     >
       Reset
     </button>
