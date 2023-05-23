@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 
 const player = ref("X");
 const board = ref([
@@ -7,6 +7,8 @@ const board = ref([
   ["", "", ""],
   ["", "", ""],
 ]);
+const playerXWins = ref(0);
+const playerOWins = ref(0);
 
 const CalculateWinner = (squares) => {
   const lines = [
@@ -59,6 +61,14 @@ const isBoardFull = computed(() => {
   }
   return true;
 });
+
+watchEffect(() => {
+  if (winner.value === "X") {
+    playerXWins.value++;
+  } else if (winner.value === "O") {
+    playerOWins.value++;
+  }
+});
 </script>
 
 <template>
@@ -68,7 +78,9 @@ const isBoardFull = computed(() => {
     >
       Tic Tac Toe
     </h1>
-    <h2 class="text-x1 mb-4">Player {{ player }}'s turn</h2>
+    <h2 class="text-x1 mb-4" v-if="!winner && !isBoardFull">
+      Player {{ player }}'s turn
+    </h2>
 
     <div class="flex flex-col items-center mb-8">
       <div v-for="(row, x) in board" :key="x" class="flex">
@@ -85,11 +97,24 @@ const isBoardFull = computed(() => {
       </div>
     </div>
 
-    <h2 v-if="winner" :class="`text-5xl font-bold mb-8 ${winner === 'X' ? 'text-pink-500' : 'text-blue-400'}`">
+    <h2
+      v-if="winner"
+      :class="`text-5xl font-bold mb-8 ${
+        winner === 'X' ? 'text-pink-500' : 'text-blue-400'
+      }`"
+    >
       Player {{ winner }} wins!
     </h2>
 
-    <h2 v-if="isBoardFull && !winner" class="text-5xl text-green-500 font-bold mb-8">It's a tie!</h2>
+    <div>Player X wins: {{ playerXWins }}</div>
+    <div>Player O wins: {{ playerOWins }}</div>
+
+    <h2
+      v-if="isBoardFull && !winner"
+      class="text-5xl text-green-500 font-bold mb-8"
+    >
+      It's a tie!
+    </h2>
 
     <button
       @click="ResetGame"
@@ -101,5 +126,4 @@ const isBoardFull = computed(() => {
   </main>
 </template>
 
-<style>
-</style>
+<style></style>
